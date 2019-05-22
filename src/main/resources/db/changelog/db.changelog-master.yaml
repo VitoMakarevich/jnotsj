@@ -1,0 +1,153 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: test1
+      runOnChange: true
+      rollback:
+        delete from table role;
+        alter table role drop constraint check_role_name;
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: role_name
+                  value: USER
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: role_name
+                  value: ADMIN
+        - sql:
+            alter table role add constraint check_role_name check(role_name in('ADMIN', 'USER'));
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: varchar(40)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user
+                    deleteCascade: true
+                    references: users(id)
+              - column:
+                  name: role_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_role
+                    deleteCascade: true
+                    references: role(id)
+        - createTable:
+            tableName: notification_data
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: text
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_author_user
+                    deleteCascade: true
+                    references: users(id)
+        - createTable:
+            tableName: notification_attempt
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_participated_user
+                    deleteCascade: true
+                    references: users(id)
+              - column:
+                  name: notification_data_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_notification_data
+                    deleteCascade: true
+                    references: notification_data(id)
+
+
+
