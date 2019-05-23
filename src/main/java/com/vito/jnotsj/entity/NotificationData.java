@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -17,9 +18,9 @@ public class NotificationData {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
         @Column
-        private Date startDate;
+        private LocalDateTime startDate;
         @Column
-        private Date endDate;
+        private LocalDateTime endDate;
         @Column
         private String text;
         @ManyToOne(fetch = FetchType.EAGER)

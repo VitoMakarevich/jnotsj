@@ -33,11 +33,12 @@ public class NotificationAttemptService {
         return this.notificationAttemptRepository.findAllByNotificationData_Id(id);
     }
 
-    public NotificationAttempt createNotificationAttempt(Long notificationDataId, NotificationAttempt notificationAttempt, UserAuth user) {
+    public NotificationAttempt createNotificationAttempt(Long notificationDataId, UserAuth user) {
         NotificationData existingNotificationData = this.notificationDataRepository.findById(notificationDataId).orElseThrow (
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
         );
         User existingUser = this.userRepository.findById(user.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        NotificationAttempt notificationAttempt = new NotificationAttempt();
         notificationAttempt.setNotificationData(existingNotificationData);
         notificationAttempt.setUser(existingUser);
 

@@ -24,18 +24,14 @@ class NotificationAttemptController {
     }
 
     @PostMapping("notificationData/{id}/notificationAttempt")
-    @ResponseBody
     public NotificationAttempt createAttempt(
             @PathVariable
-            Long id,
-            @RequestBody
-    NotificationAttempt notificationAttempt,
+                    Long id,
             @CurrentUser
                     UserAuth user
     ) {
         return this.notificationAttemptService.createNotificationAttempt(
                 id,
-                notificationAttempt,
                 user
         );
     }

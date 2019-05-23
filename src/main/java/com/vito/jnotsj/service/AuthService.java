@@ -6,10 +6,10 @@ import com.vito.jnotsj.entity.User;
 import com.vito.jnotsj.repository.RoleRepository;
 import com.vito.jnotsj.repository.UserRepository;
 import com.vito.jnotsj.security.JwtTokenProvider;
-import com.vito.jnotsj.vo.LoginRequest;
-import com.vito.jnotsj.vo.LoginResponse;
-import com.vito.jnotsj.vo.SignUpRequest;
-import com.vito.jnotsj.vo.SignUpResponse;
+import com.vito.jnotsj.vo.SignIn.LoginRequest;
+import com.vito.jnotsj.vo.SignIn.LoginResponse;
+import com.vito.jnotsj.vo.signUp.SignUpRequest;
+import com.vito.jnotsj.vo.signUp.SignUpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -80,8 +80,10 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
 
+        User user = userRepository.findOneByUsernameIgnoreCase(loginRequest.getLogin()).get();
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setAccessToken(token);
+        loginResponse.setUser(user);
 
         return loginResponse;
     }

@@ -6,6 +6,7 @@ import com.vito.jnotsj.entity.User;
 import com.vito.jnotsj.security.CurrentUser;
 import com.vito.jnotsj.security.UserAuth;
 import com.vito.jnotsj.service.NotificationDataService;
+import com.vito.jnotsj.vo.notificationData.NotificationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ class NotificationController {
     public NotificationData postNotification(
             @RequestBody
             @Valid
-            NotificationData notificationData,
+            NotificationDataVO notificationData,
             @CurrentUser
                     UserAuth user
     ) {
@@ -42,7 +43,7 @@ class NotificationController {
             Long id,
             @RequestBody
             @Valid
-            NotificationData notificationData
+                NotificationDataVO notificationData
     ) {
         return this.notificationDataService.updateNotification(id, notificationData);
     }

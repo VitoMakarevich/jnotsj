@@ -1,4 +1,4 @@
-package com.vito.jnotsj.vo;
+package com.vito.jnotsj.vo.SignIn;
 
 import lombok.Data;
 

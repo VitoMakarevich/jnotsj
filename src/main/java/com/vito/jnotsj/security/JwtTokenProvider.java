@@ -9,6 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,15 +25,13 @@ public class JwtTokenProvider {
 
     public String generateToken(Authentication authentication) {
         UserAuth user = (UserAuth) authentication.getPrincipal();
-        Date dateNow = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, jwtExpirationMins);
-        Date expirationDate = calendar.getTime();
+        LocalDateTime dateNow = LocalDateTime.now();
+        LocalDateTime expirationDate = dateNow.plusMinutes(jwtExpirationMins);
 
         return Jwts.builder()
                 .setSubject(user.getId().toString())
-                .setIssuedAt(dateNow)
-                .setExpiration(expirationDate)
+                .setIssuedAt(Date.from(dateNow.toInstant(ZoneOffset.UTC)))
+                .setExpiration(Date.from(expirationDate.toInstant(ZoneOffset.UTC)))
                 .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }

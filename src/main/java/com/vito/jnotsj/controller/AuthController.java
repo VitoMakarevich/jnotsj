@@ -2,10 +2,10 @@ package com.vito.jnotsj.controller;
 
 
 import com.vito.jnotsj.service.AuthService;
-import com.vito.jnotsj.vo.LoginRequest;
-import com.vito.jnotsj.vo.LoginResponse;
-import com.vito.jnotsj.vo.SignUpRequest;
-import com.vito.jnotsj.vo.SignUpResponse;
+import com.vito.jnotsj.vo.SignIn.LoginRequest;
+import com.vito.jnotsj.vo.SignIn.LoginResponse;
+import com.vito.jnotsj.vo.signUp.SignUpRequest;
+import com.vito.jnotsj.vo.signUp.SignUpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
