@@ -1,0 +1,10 @@
+version: '3'
+services:
+  be:
+    build: "jnotsj"
+    depends_on:
+      - postgres
+    ports:
+      - '9090:9090'
+  postgres:
+    image: "postgres:alpine"

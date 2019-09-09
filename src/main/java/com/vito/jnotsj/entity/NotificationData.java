@@ -18,9 +18,9 @@ public class NotificationData {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
         @Column
-        private LocalDateTime startDate;
+        private Date startDate;
         @Column
-        private LocalDateTime endDate;
+        private Date endDate;
         @Column
         private String text;
         @ManyToOne(fetch = FetchType.EAGER)

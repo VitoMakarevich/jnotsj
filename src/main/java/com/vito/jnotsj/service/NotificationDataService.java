@@ -6,6 +6,7 @@ import com.vito.jnotsj.repository.NotificationDataRepository;
 import com.vito.jnotsj.repository.UserRepository;
 import com.vito.jnotsj.security.UserAuth;
 import com.vito.jnotsj.vo.notificationData.NotificationDataVO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,18 +26,35 @@ public class NotificationDataService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<NotificationData> getNotifications() {
-        return StreamSupport.stream(notificationDataReposirory.findAll().spliterator(), false)
+    @Autowired
+    private ModelMapper modelMapper;
+
+    private NotificationDataVO entityToVo(NotificationData notificationData) {
+        NotificationDataVO notificationDataVO = modelMapper.map(notificationData, NotificationDataVO.class);
+
+        return notificationDataVO;
+    }
+
+    public List<NotificationDataVO> getNotifications() {
+        return StreamSupport.stream(notificationDataReposirory.findAllByOrderByEndDateDesc().spliterator(), false).map(
+                entity -> entityToVo(entity)
+        )
+        .collect(Collectors.toList());
+    }
+
+    public List<NotificationData> getNotificationsByUser(Long id) {
+        return StreamSupport.stream(notificationDataReposirory.findAllByAuthor_IdOrderByEndDateDesc(id).spliterator(), false)
                 .collect(Collectors.toList());
     }
 
-    public NotificationData createNotification(NotificationDataVO notificationDataVO, UserAuth user) {
+    public NotificationDataVO createNotification(NotificationDataVO notificationDataVO, UserAuth user) {
         User existingUser = this.userRepository.findById(user.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         NotificationData notificationData = new NotificationData();
         notificationData.setEndDate(notificationDataVO.getEndDate());
         notificationData.setStartDate(notificationDataVO.getStartDate());
         notificationData.setAuthor(existingUser);
-        return notificationDataReposirory.save(notificationData);
+        notificationData.setText(notificationDataVO.getText());
+        return entityToVo(notificationDataReposirory.save(notificationData));
     }
 
     public NotificationData updateNotification(Long id, NotificationDataVO notificationDataVO) {

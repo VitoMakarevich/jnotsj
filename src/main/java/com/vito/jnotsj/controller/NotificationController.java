@@ -20,13 +20,13 @@ class NotificationController {
     private NotificationDataService notificationDataService;
 
     @GetMapping
-    public List<NotificationData> getAllNotifications(){
+    public List<NotificationDataVO> getAllNotifications(){
         return this.notificationDataService.getNotifications();
     }
 
     @PostMapping
     @ResponseBody
-    public NotificationData postNotification(
+    public NotificationDataVO postNotification(
             @RequestBody
             @Valid
             NotificationDataVO notificationData,

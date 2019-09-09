@@ -24,12 +24,15 @@ ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
 
+
 dependencies {
+    compileClasspath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.liquibase:liquibase-core'
+    implementation 'org.modelmapper:modelmapper:2.3.2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
@@ -41,11 +44,24 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
     compile 'io.jsonwebtoken:jjwt-api:0.10.5'
+    compile group: 'com.github.javafaker', name: 'javafaker', version: '0.15'
     runtime 'io.jsonwebtoken:jjwt-impl:0.10.5',
             // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
             //'org.bouncycastle:bcprov-jdk15on:1.60',
             'io.jsonwebtoken:jjwt-jackson:0.10.5'
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'com.vito.jnotsj.Application'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 
 test {
     outputs.dir snippetsDir
