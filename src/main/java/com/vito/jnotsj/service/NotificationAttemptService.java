@@ -4,6 +4,9 @@ package com.vito.jnotsj.service;
 import com.vito.jnotsj.entity.NotificationAttempt;
 import com.vito.jnotsj.entity.NotificationData;
 import com.vito.jnotsj.entity.User;
+import com.vito.jnotsj.kafka.KafkaProducer;
+import com.vito.jnotsj.mailEnitty.NotificationAttemptEmail;
+import com.vito.jnotsj.mailEnitty.NotificationAttemptedData;
 import com.vito.jnotsj.repository.NotificationAttemptRepository;
 import com.vito.jnotsj.repository.NotificationDataRepository;
 import com.vito.jnotsj.repository.UserRepository;
@@ -33,6 +36,9 @@ public class NotificationAttemptService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private KafkaProducer kafkaProducer;
+
     private NotificationAttemptVO entityToVo(NotificationAttempt notificationAttempt) {
         NotificationAttemptVO notificationAttemptVO = modelMapper.map(notificationAttempt, NotificationAttemptVO.class);
 
@@ -61,6 +67,14 @@ public class NotificationAttemptService {
         NotificationAttempt notificationAttempt = new NotificationAttempt();
         notificationAttempt.setNotificationData(existingNotificationData);
         notificationAttempt.setUser(existingUser);
+        NotificationAttemptEmail mail = new NotificationAttemptEmail();
+        mail.setEmail("abc@esq.ru");
+        NotificationAttemptedData notificationAttemptedData = new NotificationAttemptedData();
+        notificationAttemptedData.setUsername(existingUser.getUsername());
+        NotificationDataVO notificationDataVO = modelMapper.map(existingNotificationData, NotificationDataVO.class);
+        notificationAttemptedData.setNotificationDataVO(notificationDataVO);
+        mail.setContent(notificationAttemptedData);
+        kafkaProducer.sendMessage(mail);
 
         return entityToVo(notificationAttemptRepository.save(notificationAttempt));
     }

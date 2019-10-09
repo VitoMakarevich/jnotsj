@@ -9,11 +9,16 @@ apply plugin: 'io.spring.dependency-management'
 group = 'com.vito'
 version = '0.0.1'
 sourceCompatibility = '1.8'
+archivesBaseName = 'jnotsj'
 
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+}
+
+bootJar {
+    baseName = 'jnotsj'
 }
 
 repositories {
@@ -24,7 +29,6 @@ ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
 
-
 dependencies {
     compileClasspath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -34,6 +38,7 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.modelmapper:modelmapper:2.3.2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    compile 'org.springframework.kafka:spring-kafka:2.2.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
@@ -46,8 +51,6 @@ dependencies {
     compile 'io.jsonwebtoken:jjwt-api:0.10.5'
     compile group: 'com.github.javafaker', name: 'javafaker', version: '0.15'
     runtime 'io.jsonwebtoken:jjwt-impl:0.10.5',
-            // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
-            //'org.bouncycastle:bcprov-jdk15on:1.60',
             'io.jsonwebtoken:jjwt-jackson:0.10.5'
 }
 
@@ -61,7 +64,6 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
-
 
 test {
     outputs.dir snippetsDir
