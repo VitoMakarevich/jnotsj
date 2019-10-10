@@ -59,7 +59,7 @@ public class AuthService {
         user.setEmail(signUpRequest.getEmail());
         user.setUsername(signUpRequest.getUsername());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        Role role = roleRepository.findByRoleName(RoleName.ADMIN).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND) );
+        Role role = roleRepository.findByRoleName(RoleName.ADMIN).get();
         user.setRoles(Collections.singleton(role));
 
         userRepository.save(user);
