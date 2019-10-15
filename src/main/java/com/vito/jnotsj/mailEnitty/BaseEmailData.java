@@ -3,12 +3,12 @@ package com.vito.jnotsj.mailEnitty;
 import lombok.Data;
 
 @Data
-public abstract class BaseEmailData<T> {
-    private String email;
+public class BaseEmailData<T> {
+    protected String email;
 
-    private MailType type;
+    protected MailType type;
 
-    private String subject;
+    protected String subject;
 
-    private T content;
+    protected T content;
 }

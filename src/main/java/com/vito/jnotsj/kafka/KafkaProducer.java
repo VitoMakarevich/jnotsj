@@ -1,20 +1,25 @@
 package com.vito.jnotsj.kafka;
 
 import com.vito.jnotsj.mailEnitty.BaseEmailData;
-import org.apache.kafka.clients.producer.Producer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.Callback;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 @Service
+@Slf4j
 public class KafkaProducer {
-    private static final Logger logger = LoggerFactory.getLogger(Producer.class);
-    private static final String TOPIC = "users";
+    @Value("${spring.kafka.mail.topic}")
+    private String mailTopic;
     @Autowired
-    private KafkaTemplate<String, BaseEmailData> kafkaTemplate;
+    private KafkaTemplate kafkaTemplate;
+
     public void sendMessage(BaseEmailData data){
-        this.kafkaTemplate.send(TOPIC, data);
+        ListenableFuture listenableFuture = this.kafkaTemplate.send(mailTopic, data);
+        listenableFuture.addCallback(new KafkaProducerCallback());
     }
 }
