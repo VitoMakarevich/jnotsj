@@ -16,4 +16,4 @@ services:
     environment:
       ADVERTISED_HOST: 'localhost'
       ADVERTISED_PORT: '9092'
-      TOPICS: 'users'
+      TOPICS: 'mail'

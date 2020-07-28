@@ -1,4 +1,4 @@
-package com.vito.jnotsj.service;
+package com.vito.jnotsj.security;
 
 import com.vito.jnotsj.entity.User;
 import com.vito.jnotsj.repository.UserRepository;
@@ -6,14 +6,18 @@ import com.vito.jnotsj.security.UserAuth;
 import lombok.EqualsAndHashCode;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Service
+@Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;

@@ -10,6 +10,7 @@ import com.vito.jnotsj.vo.SignIn.LoginRequest;
 import com.vito.jnotsj.vo.SignIn.LoginResponse;
 import com.vito.jnotsj.vo.signUp.SignUpRequest;
 import com.vito.jnotsj.vo.signUp.SignUpResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,34 +25,29 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    public static final String USERNAME_EXISTS = "Username already exists";
+    public static final String EMAIL_EXISTS = "Email already exists";
 
     @Transactional
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         if(this.userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "${username.duplicate}"
+                    USERNAME_EXISTS
             );
         }
-        if(userRepository.existsByEmail(signUpRequest.getUsername())) {
+        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "${email.duplicate}"
+                    EMAIL_EXISTS
             );
         }
 

@@ -36,6 +36,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.liquibase:liquibase-core'
+    implementation 'com.h2database:h2'
+    implementation 'org.springframework.kafka:spring-kafka-test'
     implementation 'org.modelmapper:modelmapper:2.3.2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     compile 'org.springframework.kafka:spring-kafka:2.2.3.RELEASE'
@@ -46,6 +48,9 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
     compile 'io.jsonwebtoken:jjwt-api:0.10.5'
