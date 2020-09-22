@@ -1,5 +1,6 @@
-package com.vito.jnotsj.auth;
+package com.vito.jnotsj.auth.service;
 
+import com.vito.jnotsj.auth.UserAuth;
 import com.vito.jnotsj.auth.entity.User;
 import com.vito.jnotsj.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         val user = userRepository.findOneByUsernameIgnoreCase(username).orElseThrow (
                 () -> new UsernameNotFoundException(username)
-        );
-
-        return UserAuth.create(user);
-    }
-
-    @Transactional
-    public UserDetails loadUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow (
-            () -> new UsernameNotFoundException("User not found with id : " + id)
         );
 
         return UserAuth.create(user);

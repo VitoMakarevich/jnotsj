@@ -2,9 +2,8 @@ package com.vito.jnotsj.auth.config;
 
 import com.vito.jnotsj.auth.AuthenticationFilter;
 import com.vito.jnotsj.auth.JwtTokenProvider;
-import com.vito.jnotsj.auth.UserDetailsServiceImpl;
+import com.vito.jnotsj.auth.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

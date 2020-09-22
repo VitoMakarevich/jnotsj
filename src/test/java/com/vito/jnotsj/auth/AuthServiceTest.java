@@ -1,12 +1,11 @@
 package com.vito.jnotsj.auth;
 
 import com.github.javafaker.Faker;
-import com.vito.jnotsj.auth.AuthService;
+import com.vito.jnotsj.auth.service.AuthService;
 import com.vito.jnotsj.auth.entity.Role;
 import com.vito.jnotsj.auth.entity.RoleName;
 import com.vito.jnotsj.auth.repository.RoleRepository;
 import com.vito.jnotsj.auth.repository.UserRepository;
-import com.vito.jnotsj.auth.JwtTokenProvider;
 import com.vito.jnotsj.auth.vo.signUp.SignUpRequest;
 import com.vito.jnotsj.auth.vo.signUp.SignUpResponse;
 import org.junit.Before;

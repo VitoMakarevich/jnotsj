@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -30,6 +31,7 @@ public class NotificationDataService {
         return notificationDataVO;
     }
 
+    @RolesAllowed({"ADMIN", "USER"})
     public List<NotificationDataVO> getNotifications() {
         return StreamSupport.stream(notificationDataReposirory.findAllByOrderByEndDateDesc().spliterator(), false).map(
                 entity -> entityToVo(entity)
@@ -37,11 +39,7 @@ public class NotificationDataService {
         .collect(Collectors.toList());
     }
 
-    public List<NotificationData> getNotificationsByUser(Long id) {
-        return StreamSupport.stream(notificationDataReposirory.findAllByAuthor_IdOrderByEndDateDesc(id).spliterator(), false)
-                .collect(Collectors.toList());
-    }
-
+    @RolesAllowed({"ADMIN", "USER"})
     public NotificationDataVO createNotification(NotificationDataVO notificationDataVO, UserAuth user) {
         User existingUser = this.userRepository.findById(user.getUser().getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         NotificationData notificationData = new NotificationData();
@@ -52,6 +50,7 @@ public class NotificationDataService {
         return entityToVo(notificationDataReposirory.save(notificationData));
     }
 
+    @RolesAllowed({"ADMIN", "USER"})
     public NotificationData updateNotification(Long id, NotificationDataVO notificationDataVO) {
         NotificationData existing = notificationDataReposirory.findById(id).orElseThrow (
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
@@ -64,6 +63,7 @@ public class NotificationDataService {
         return notificationDataReposirory.save(notificationData);
     }
 
+    @RolesAllowed({"ADMIN", "USER"})
     public NotificationData deleteNotification(Long id) {
         NotificationData existing = notificationDataReposirory.findById(id).orElseThrow (
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND)

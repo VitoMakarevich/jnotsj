@@ -1,6 +1,8 @@
 package com.vito.jnotsj.notification.service;
 
 
+import com.vito.jnotsj.auth.entity.Role;
+import com.vito.jnotsj.auth.entity.RoleName;
 import com.vito.jnotsj.notification.entity.NotificationAttempt;
 import com.vito.jnotsj.notification.entity.NotificationData;
 import com.vito.jnotsj.auth.entity.User;
@@ -18,10 +20,13 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,8 +43,7 @@ public class NotificationAttemptService {
 
     private final NotificationMailService notificationMailService;
 
-    public static final String ALREADY_EXISTS = "Notification attempt already exists";
-
+    @RolesAllowed({"USER", "ADMIN"})
     public List<NotificationAttemptVO> getNotificationAttemptForData(Long id) {
         this.notificationDataRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
@@ -47,21 +51,20 @@ public class NotificationAttemptService {
         return this.notificationAttemptRepository.findAllByNotificationData_Id(id).stream().map(notificationAttemptMapper::entityToVo).collect(Collectors.toList());
     }
 
-    public List<NotificationAttemptVO> getNotificationAttemptForUser(UserAuth user) {
-        return this.notificationAttemptRepository.findAllByUser_Id(user.getUser().getId()).stream().map(notificationAttemptMapper::entityToVo).collect(Collectors.toList());
+    @RolesAllowed({"ADMIN", "USER"})
+    public List<NotificationAttemptVO> getNotificationAttemptForUser(Long userId) {
+        return this.notificationAttemptRepository.findAllByUser_Id(userId).stream().map(notificationAttemptMapper::entityToVo).collect(Collectors.toList());
     }
 
     @Transactional
+    @RolesAllowed({"ADMIN", "USER"})
     public NotificationAttemptVO createNotificationAttempt(Long notificationDataId, UserAuth user) {
         NotificationData existingNotificationData = this.notificationDataRepository.findById(notificationDataId).orElseThrow (
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
         );
         boolean alreadyExists = this.notificationAttemptRepository.existsByNotificationData_Id_AndUser_Id(notificationDataId, user.getUser().getId());
         if(alreadyExists) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    ALREADY_EXISTS
-            );
+            throw new NotificationAttemptAlreadyExistsException();
         }
         User existingUser = this.userRepository.findById(user.getUser().getId()).get();
         NotificationAttempt notificationAttempt = NotificationAttempt.builder()
@@ -74,6 +77,7 @@ public class NotificationAttemptService {
     }
 
     @Transactional
+    @RolesAllowed({"ADMIN", "USER"})
     public NotificationAttemptVO deleteNotificationAttempt(Long notificationAttemptId) {
         NotificationAttempt foundedNotificationAttempt = this.notificationAttemptRepository.findById(notificationAttemptId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         this.notificationAttemptRepository.deleteById(notificationAttemptId);

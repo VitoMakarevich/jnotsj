@@ -41,15 +41,14 @@ class NotificationAttemptController {
     ) {
         return this.notificationAttemptService.createNotificationAttempt(
                 id,
-                (UserAuth) user
+                user
         );
     }
 
     @DeleteMapping("notificationAttempt/{id}")
     public NotificationAttemptVO deleteAttempt(
             @PathVariable
-                    Long id,
-            UserAuth user
+                    Long id
     ) {
         return this.notificationAttemptService.deleteNotificationAttempt(
                 id
