@@ -10,4 +10,9 @@ public class HttpRequestUtil {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(object);
     }
+
+    public static <T> T asValue(String json, Class<T> classname) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(json, classname);
+    }
 }

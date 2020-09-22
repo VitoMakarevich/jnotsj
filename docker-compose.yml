@@ -1,33 +1,31 @@
 version: '3'
 services:
-  be:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/nots
-      SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:9092
-    depends_on:
-      - postgres
-      - kafka
-    ports:
-      - '9090:9090'
-    volumes:
-      - ./build:/tmp
-  postgres:
+  postgres :
     container_name: 'jnotsj-pg'
-    image: "postgres:alpine"
-    expose:
-      - 5432
+    image: "postgres:11-alpine"
+    ports:
+      - '5435:5432'
     environment:
       POSTGRES_USER: 'test2'
       POSTGRES_DB: 'nots'
+      POSTGRES_PASSWORD: 'test2'
+  zookeeper:
+    container_name: 'jnotsj-zookeeper'
+    image: 'zookeeper:latest'
+    ports:
+      - '2181:2181'
   kafka:
     container_name: 'jnotsj-kafka'
-    image: "spotify/kafka"
-    expose:
-      - 9092
+    image: "wurstmeister/kafka:latest"
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
     environment:
-      ADVERTISED_HOST: kafka
-      ADVERTISED_PORT: '9092'
-      TOPICS: 'users'
+      KAFKA_BROKER_ID: 1
+      KAFKA_HOST: localhost
+      KAFKA_PORT: 9092
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: 'mail:1:1'

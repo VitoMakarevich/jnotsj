@@ -1,31 +1,28 @@
 package com.vito.jnotsj;
 
-import com.vito.jnotsj.entity.Role;
-import com.vito.jnotsj.entity.RoleName;
-import com.vito.jnotsj.entity.User;
-import com.vito.jnotsj.repository.RoleRepository;
-import com.vito.jnotsj.repository.UserRepository;
+import com.vito.jnotsj.auth.entity.Role;
+import com.vito.jnotsj.auth.entity.RoleName;
+import com.vito.jnotsj.auth.entity.User;
+import com.vito.jnotsj.auth.repository.RoleRepository;
+import com.vito.jnotsj.auth.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collections;
 
 @Component
-@Profile("dev")
+@ActiveProfiles(profiles = {"dev"})
+@RequiredArgsConstructor
 public class ApplicationAuthSeed implements ApplicationRunner {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) {

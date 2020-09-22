@@ -1,3 +1,10 @@
+buildscript {
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.10.RELEASE"
+    }
+}
+
+
 plugins {
     id 'org.asciidoctor.convert' version '1.5.3'
     id 'org.springframework.boot' version '2.1.5.RELEASE'
@@ -17,6 +24,7 @@ configurations {
     }
 }
 
+
 bootJar {
     baseName = 'jnotsj'
 }
@@ -27,19 +35,28 @@ repositories {
 
 ext {
     set('snippetsDir', file("build/generated-snippets"))
+    set('springCloudVersion', "Greenwich.SR6")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR6'
+    }
 }
 
 dependencies {
-    compileClasspath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.liquibase:liquibase-core'
     implementation 'com.h2database:h2'
+    implementation 'org.springframework.security:spring-security-oauth2-client'
     implementation 'org.springframework.kafka:spring-kafka-test'
     implementation 'org.modelmapper:modelmapper:2.3.2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'com.vladmihalcea:hibernate-types-52:2.2.2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-hystrix:1.4.7.RELEASE'
     compile 'org.springframework.kafka:spring-kafka:2.2.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
@@ -58,6 +75,8 @@ dependencies {
     runtime 'io.jsonwebtoken:jjwt-impl:0.10.5',
             'io.jsonwebtoken:jjwt-jackson:0.10.5'
 }
+
+
 
 task fatJar(type: Jar) {
     manifest {

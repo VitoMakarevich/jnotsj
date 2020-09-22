@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: test1
+      author: vitaliy.makarevich.work@gmail.com
       runOnChange: true
       rollback:
         delete from table role;
@@ -148,6 +148,3 @@ databaseChangeLog:
                     foreignKeyName: fk_notification_data
                     deleteCascade: true
                     references: notification_data(id)
-
-
-
